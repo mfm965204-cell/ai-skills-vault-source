@@ -683,7 +683,62 @@ document.addEventListener('keydown', function(e){
 })();
 """
 
-def head(title, desc, extra=""):
+VERIFY = '<meta name="google-site-verification" content="tMhCBaMY8rxKG1oI79L7en-ncRHKgykYXxysMzd6KzM" />'
+OG_IMAGE = "/og.png"
+
+def ld(obj):
+    """Serialise one JSON-LD graph as a script tag."""
+    return ('<script type="application/ld+json">'
+            + json.dumps(obj, separators=(",", ":"), ensure_ascii=False) + "</script>")
+
+PERSON_LD = {
+    "@type": "Person", "@id": BASE + "/#author", "name": "Error",
+    "url": "https://github.com/ERROR0101r/",
+    "sameAs": ["https://github.com/ERROR0101r/",
+               "https://t.me/aab_ho_ga_comeback",
+               "https://t.me/Hacking_with_ERROR_group",
+               "https://www.instagram.com/fahad0101r"],
+}
+
+def site_ld():
+    return {"@context": "https://schema.org", "@graph": [
+        {"@type": "WebSite", "@id": BASE + "/#website", "url": BASE + "/", "name": "Skill Vault",
+         "description": "Free, detailed, MIT-licensed skills that install into Claude, Copilot, Cursor "
+                        "or any AI agent with one prompt and a URL.",
+         "inLanguage": "en", "publisher": {"@id": BASE + "/#author"},
+         "license": "https://opensource.org/licenses/MIT"},
+        PERSON_LD,
+    ]}
+
+def article_ld(title, desc, url):
+    return {"@context": "https://schema.org", "@graph": [
+        {"@type": "TechArticle", "headline": title, "description": desc,
+         "url": url, "mainEntityOfPage": {"@type": "WebPage", "@id": url},
+         "datePublished": "2026-11-15", "dateModified": "2026-11-15",
+         "inLanguage": "en", "isAccessibleForFree": True,
+         "license": "https://opensource.org/licenses/MIT",
+         "image": BASE + OG_IMAGE,
+         "author": {"@id": BASE + "/#author"},
+         "publisher": {"@id": BASE + "/#author"},
+         "isPartOf": {"@id": BASE + "/#website"}},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "All skills", "item": BASE + "/"},
+            {"@type": "ListItem", "position": 2, "name": title, "item": url}]},
+    ]}
+
+def page_ld(title, desc, url):
+    return {"@context": "https://schema.org", "@graph": [
+        {"@type": "WebPage", "name": title, "description": desc, "url": url,
+         "inLanguage": "en", "isPartOf": {"@id": BASE + "/#website"}},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "All skills", "item": BASE + "/"},
+            {"@type": "ListItem", "position": 2, "name": title, "item": url}]},
+    ]}
+
+def head(title, desc, canonical="", jsonld="", og_type="website", noindex=False, extra=""):
+    canon = canonical or (BASE + "/")
+    robots = "noindex,nofollow" if noindex else "index,follow,max-image-preview:large,max-snippet:-1"
+    ld_tags = ld(jsonld) if isinstance(jsonld, dict) else (jsonld or "")
     return f"""<!doctype html>
 <html lang="en" class="nojs">
 <head>
@@ -691,14 +746,28 @@ def head(title, desc, extra=""):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
+<meta name="robots" content="{robots}">
+{VERIFY}
+<link rel="canonical" href="{canon}">
 <meta name="theme-color" content="#07070b">
-<meta property="og:type" content="website">
+<meta name="author" content="Error">
+<meta property="og:type" content="{og_type}">
+<meta property="og:site_name" content="Skill Vault">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
-<meta property="og:url" content="{BASE}/">
+<meta property="og:url" content="{canon}">
+<meta property="og:image" content="{BASE}{OG_IMAGE}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_IN">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{esc(title)}">
+<meta name="twitter:description" content="{esc(desc)}">
+<meta name="twitter:image" content="{BASE}{OG_IMAGE}">
+<link rel="alternate" type="application/json" href="/skills.json" title="Skill manifest">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%237c5cff'/><text x='16' y='22' font-size='16' font-family='monospace' fill='%2307070b' text-anchor='middle'>S</text></svg>">
 <style>{CSS}</style>
+{ld_tags}
 {extra}
 </head>
 <body>
@@ -980,11 +1049,47 @@ SOFTWARE.</pre>
  """)
 
 
+def build_og():
+    """1200x630 social card, drawn once at build time."""
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+    except ImportError:
+        return False
+    W, H = 1200, 630
+    img = Image.new("RGB", (W, H), "#07070b")
+    d = ImageDraw.Draw(img, "RGBA")
+    for cx, cy, r, col in [(180, 60, 520, (124, 92, 255, 46)), (1040, 90, 420, (34, 211, 238, 34)),
+                           (600, 700, 520, (124, 92, 255, 26))]:
+        d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=col)
+    def font(sz, bold=True):
+        for p in ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" if bold
+                  else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+                  "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"]:
+            try: return ImageFont.truetype(p, sz)
+            except Exception: continue
+        return ImageFont.load_default()
+    # monogram
+    d.rounded_rectangle([80, 76, 148, 144], radius=18, fill=(124, 92, 255))
+    d.text((99, 92), "S", font=font(40), fill="#07070b")
+    d.text((166, 100), "Skill Vault", font=font(30), fill="#f2f2f7")
+    d.text((80, 208), "Skills that make", font=font(64), fill="#ffffff")
+    d.text((80, 282), "your AI agent", font=font(64), fill="#ffffff")
+    d.text((80, 356), "actually useful", font=font(64), fill="#9d8cff")
+    d.text((82, 452), f"{len(META)} detailed, free skills — one-prompt install from a URL.",
+           font=font(28, False), fill="#9a9aad")
+    d.line([80, 512, 1120, 512], fill=(255, 255, 255, 26), width=1)
+    d.text((82, 536), "Claude · Copilot · Cursor · Codex · any agent", font=font(22, False), fill="#6e6e82")
+    d.text((830, 536), "Developed by Error", font=font(22), fill="#c7c7d6")
+    img.save(ROOT / "og.png", "PNG", optimize=True)
+    return True
+
 def build_legal():
     """Render terms, privacy, disclaimer and licence from the content above."""
     for slug in LEGAL_PAGES:
         title, desc, body = LEGAL[slug]
-        page = head(f"{title} — Skill Vault", desc) + f"""
+        page = head(f"{title} — Skill Vault", desc,
+                canonical=f"{BASE}/{slug}.html",
+                jsonld=page_ld(title, desc, f"{BASE}/{slug}.html")) + f"""
 <div class="wrap"><div class="doc">
   <a class="back" href="/">← All skills</a>
   <h1>{title}</h1>
@@ -1041,9 +1146,32 @@ def build_index():
     stage = (ring(ring_a, "clamp(128px,17vw,238px)", "a")
              + ring(ring_b, "clamp(84px,11.5vw,158px)", "b"))
 
+    index_ld = site_ld()
+    index_ld["@graph"].append({
+        "@type": "ItemList", "name": "All skills", "numberOfItems": n,
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "name": m["title"],
+             "url": f"{BASE}/skills/{m['slug']}.html"}
+            for i, m in enumerate(META)],
+    })
+    index_ld["@graph"].append({
+        "@type": "FAQPage",
+        "mainEntity": [
+            {"@type": "Question", "name": "Which AI agents can use these skills?",
+             "acceptedAnswer": {"@type": "Answer", "text": "Any agent that can read a URL or a pasted file: Claude, ChatGPT with browsing, GitHub Copilot Chat, Cursor, Windsurf, Codex, Gemini, or your own agent loop."}},
+            {"@type": "Question", "name": "Is installing a skill really just one prompt?",
+             "acceptedAnswer": {"@type": "Answer", "text": "Yes. The prompt tells the agent to fetch a specific URL and follow it. The skill itself is a 250-340 line markdown procedure, so the agent gets a full method instead of a one-line request."}},
+            {"@type": "Question", "name": "Are the skills free?",
+             "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every skill file is MIT licensed: use, modify and redistribute them, including commercially, provided the copyright notice is kept."}},
+            {"@type": "Question", "name": "Do these skills work for non-coding work?",
+             "acceptedAnswer": {"@type": "Answer", "text": "About half are non-coding: 3D animation, video editing, landing page copy, SEO, dashboards, spreadsheets, resumes, branding and PDF pipelines."}},
+        ],
+    })
     html_out = head(
-        f"Skill Vault — {n} installable AI agent skills",
-        f"{n} detailed, downloadable skills for Claude, Copilot, Cursor and any AI agent. Install with one prompt and a URL."
+        f"Skill Vault — {n} free AI agent skills for Claude & Copilot",
+        f"Download {n} detailed, free skills for Claude, Copilot, Cursor and any AI agent. "
+        f"One-prompt install from a URL. MIT licensed, no signup, no tracking.",
+        canonical=f"{BASE}/", jsonld=index_ld
     ) + f"""
 <header class="hero"><div class="wrap hero3d">
   <div>
@@ -1193,7 +1321,10 @@ GET {BASE}/llms.txt         → plain-text index for LLM crawlers</pre>
         body = md2html(md)
         url = f"{BASE}/skills/{m['slug']}.md"
         prompt = PROMPT.format(url=url)
-        page = head(f"{m['title']} — Skill Vault", m["tag"]) + f"""
+        page = head(f"{m['title']} — free AI agent skill | Skill Vault",
+                f"{m['tag']} Free MIT-licensed skill for Claude, Copilot, Cursor and any AI agent.",
+                canonical=f"{BASE}/skills/{m['slug']}.html", og_type="article",
+                jsonld=article_ld(m["title"], m["tag"], f"{BASE}/skills/{m['slug']}.html")) + f"""
 <div class="wrap"><div class="doc">
   <a class="back" href="/">← All skills</a>
   <div class="dochead">
@@ -1272,11 +1403,18 @@ GET {BASE}/llms.txt         → plain-text index for LLM crawlers</pre>
     sm = ['<?xml version="1.0" encoding="UTF-8"?>',
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in urls:
-        sm.append(f"<url><loc>{u}</loc><lastmod>2026-11-15</lastmod><priority>0.9</priority></url>")
+        if u == f"{BASE}/":
+            pri = "1.0"
+        elif "/skills/" in u:
+            pri = "0.8"
+        else:
+            pri = "0.3"
+        sm.append(f"<url><loc>{u}</loc><lastmod>2026-11-15</lastmod>"
+                  f"<changefreq>weekly</changefreq><priority>{pri}</priority></url>")
     sm.append("</urlset>")
     (ROOT / "sitemap.xml").write_text("\n".join(sm), encoding="utf-8")
 
-    nf = head("404 — Skill Vault", "Page not found.") + """
+    nf = head("404 — Skill Vault", "Page not found.", canonical=f"{BASE}/404.html", noindex=True) + """
 <div class="wrap" style="text-align:center;padding:110px 0 130px">
   <h1 style="font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:-.03em">404</h1>
   <p style="color:var(--mut);margin-top:14px">That skill does not exist — yet.</p>
@@ -1294,6 +1432,7 @@ GET {BASE}/llms.txt         → plain-text index for LLM crawlers</pre>
 
 build_index()
 build_legal()
+print("og.png:", build_og())
 print("built index +", len(META), "skill pages")
 for p in sorted(ROOT.rglob("*")):
     if p.is_file():
