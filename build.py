@@ -566,6 +566,44 @@ footer a:hover{color:var(--tx)}
 .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
 .nojs .rv{opacity:1;transform:none}
+
+/* ---------- developer credit + social links ---------- */
+.dev{margin-top:24px;border:1px solid var(--line);border-radius:16px;padding:26px;
+ background:linear-gradient(180deg,#111119,#0b0b12);display:grid;grid-template-columns:1fr auto;
+ gap:24px;align-items:center}
+.dev .who{display:flex;gap:14px;align-items:center}
+.dev .av{width:48px;height:48px;border-radius:13px;display:grid;place-items:center;
+ font-weight:800;font-size:19px;color:#0a0a12;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+.dev h3{font-size:1.06rem;font-weight:720;letter-spacing:-.02em}
+.dev p{color:var(--mut);font-size:13.4px;margin-top:5px;max-width:52ch}
+.socials{display:flex;gap:9px;flex-wrap:wrap}
+.soc{display:flex;align-items:center;gap:9px;padding:9px 14px;border:1px solid var(--line);
+ border-radius:10px;background:#ffffff08;font-size:12.8px;font-weight:620;color:#dcdce8;
+ transition:.15s;white-space:nowrap}
+.soc:hover{border-color:#3a3a52;background:#ffffff14;transform:translateY(-1px)}
+.soc svg{width:15px;height:15px;fill:currentColor;opacity:.92;flex:0 0 auto}
+.soc small{color:var(--dim);font-weight:500;font-size:11.5px}
+@media(max-width:860px){.dev{grid-template-columns:1fr}}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:40px 0 44px;margin-top:44px;color:var(--dim);font-size:13px}
+footer .cols{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:28px;padding-bottom:26px;
+ border-bottom:1px solid var(--line)}
+footer h4{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+ margin:0 0 12px;font-weight:700}
+footer ul{list-style:none;padding:0;margin:0;display:grid;gap:9px;font-size:13.2px}
+footer ul a{color:#b6b6c6}
+footer ul a:hover{color:var(--tx)}
+footer .brandblk{display:flex;gap:12px;align-items:flex-start}
+footer .fmark{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+ font-weight:800;font-size:13px;color:#0a0a12;background:linear-gradient(135deg,var(--brand),var(--brand2));flex:0 0 auto}
+footer .bott{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:18px;font-size:12.4px}
+footer .bott a:hover{color:var(--tx)}
+@media(max-width:820px){footer .cols{grid-template-columns:1fr 1fr;gap:22px}}
+
+/* ---------- legal pages ---------- */
+.doc .updated{font-size:12.5px;color:var(--dim);margin-top:6px;font-family:var(--mono)}
+.doc .lede{font-size:15.5px;color:#cfcfdd;border-left:2px solid var(--brand);padding-left:14px;margin:18px 0 26px}
 """
 
 JS = """
@@ -676,15 +714,289 @@ def head(title, desc, extra=""):
 </div></nav>
 """
 
-FOOT = """
+SOCIALS = [
+    ("Telegram channel", "@aab_ho_ga_comeback", "https://t.me/aab_ho_ga_comeback",
+     '<svg viewBox="0 0 24 24"><path d="M21.9 4.3 18.6 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1L18 6.7c.4-.4-.1-.6-.6-.2L6.5 13.3l-4.9-1.5c-1.1-.3-1.1-1.1.2-1.6L20.4 2.8c.9-.3 1.7.2 1.5 1.5Z"/></svg>'),
+    ("Telegram group", "Hacking with ERROR", "https://t.me/Hacking_with_ERROR_group",
+     '<svg viewBox="0 0 24 24"><path d="M21.9 4.3 18.6 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1L18 6.7c.4-.4-.1-.6-.6-.2L6.5 13.3l-4.9-1.5c-1.1-.3-1.1-1.1.2-1.6L20.4 2.8c.9-.3 1.7.2 1.5 1.5Z"/></svg>'),
+    ("GitHub", "ERROR0101r", "https://github.com/ERROR0101r/",
+     '<svg viewBox="0 0 24 24"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 1.7 2.7 1.2 3.3.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.1 18.3 4.4 18.3 4.4c.6 1.6.2 2.8.1 3.1.8.9 1.2 1.9 1.2 3.2 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6A11.5 11.5 0 0 0 12 .5Z"/></svg>'),
+    ("Instagram", "@fahad0101r", "https://www.instagram.com/fahad0101r?dlrf=MWVrd2hoZXBuZHk0cw==",
+     '<svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2Zm0 3.2A6.6 6.6 0 1 0 18.6 12 6.6 6.6 0 0 0 12 5.4Zm0 10.9A4.3 4.3 0 1 1 16.3 12 4.3 4.3 0 0 1 12 16.3Zm6.9-11.1a1.5 1.5 0 1 1-1.5-1.5 1.5 1.5 0 0 1 1.5 1.5Z"/></svg>'),
+]
+
+N = len(META)
+
+_LEGAL_LINKS = "".join(
+    f'<li><a href="/{s}.html">{label}</a></li>' for s, label in
+    [("terms", "Terms of Use"), ("privacy", "Privacy Policy"),
+     ("disclaimer", "Disclaimer"), ("license", "Licensing &amp; MIT")])
+
+_SOC_FOOT = "".join(
+    f'<li><a href="{url}" target="_blank" rel="noopener noreferrer me">{label}</a></li>'
+    for label, _h, url, _svg in SOCIALS)
+
+FOOT = f"""
 <footer><div class="wrap">
-  <div>Skill Vault — 10 installable agent skills. Free to use, MIT licensed.</div>
-  <div><a href="/skills.json">skills.json</a> · <a href="/llms.txt">llms.txt</a> · <a href="/#install">Install</a></div>
+  <div class="cols">
+    <div>
+      <div class="brandblk">
+        <span class="fmark">S</span>
+        <div>
+          <div style="color:var(--tx);font-weight:700;font-size:14px">Skill Vault</div>
+          <div style="font-size:12.6px;margin-top:3px">{N} installable agent skills. Free to use, MIT licensed.</div>
+          <div style="font-size:12.6px;margin-top:8px">Developed by <strong style="color:var(--tx)">Error</strong></div>
+        </div>
+      </div>
+    </div>
+    <div><h4>Skills</h4><ul>
+      <li><a href="/#skills">All skills</a></li>
+      <li><a href="/#install">How to install</a></li>
+      <li><a href="/skills.json">skills.json</a></li>
+      <li><a href="/llms.txt">llms.txt</a></li>
+    </ul></div>
+    <div><h4>Legal</h4><ul>{_LEGAL_LINKS}</ul></div>
+    <div><h4>Connect</h4><ul>{_SOC_FOOT}</ul></div>
+  </div>
+  <div class="bott">
+    <div>&copy; 2026 Skill Vault. Skill files MIT licensed. Built and maintained by Error.</div>
+    <div><a href="/sitemap.xml">Sitemap</a> · <a href="/#faq">FAQ</a> · <a href="/terms.html">Terms</a></div>
+  </div>
 </div></footer>
 <div class="toast" id="toast">Copied</div>
 <script>%s</script>
 </body>
 </html>""" % JS
+
+LEGAL_PAGES = ["terms", "privacy", "disclaimer", "license"]
+
+_UPDATED = "15 November 2026"
+_CONTACT = ('<a href="https://t.me/aab_ho_ga_comeback" target="_blank" rel="noopener noreferrer">'
+            'Telegram channel</a> or <a href="https://github.com/ERROR0101r/" target="_blank" '
+            'rel="noopener noreferrer">GitHub</a>')
+
+LEGAL = {}
+
+LEGAL["terms"] = ("Terms of Use",
+ "The rules for using Skill Vault: licence, acceptable use, warranty and liability.",
+ """
+ <p class="lede">These terms govern your use of Skill Vault. By opening this site or using any
+ skill file from it, you agree to them. If you do not agree, please do not use the site.</p>
+
+ <h2>1. What Skill Vault is</h2>
+ <p>Skill Vault is a free, static library of markdown files that instruct AI agents how to perform a
+ task. There is no account, no subscription and no payment. The files are instructions for software
+ you run yourself; the site does not execute them and does not control what your agent does with them.</p>
+
+ <h2>2. Licence to use</h2>
+ <p>Every skill file is released under the <strong>MIT Licence</strong> (full text on the
+ <a href="/license.html">Licensing page</a>). You may use, copy, modify and redistribute them,
+ including commercially, provided the copyright notice is kept.</p>
+ <p>The site's design, name, wordmark and logo are &copy; 2026 Error and are not licensed for reuse as
+ your own brand. You may link to the site freely.</p>
+
+ <h2>3. Acceptable use</h2>
+ <p>You agree not to use the skills or the site to break the law, to harm or defraud anyone, to
+ infringe someone's rights, or to violate the terms of a third-party service. Several skills describe
+ work with legal limits — scraping, personal data, security testing, hiring, finance. Those sections are
+ part of the skill and are not optional.</p>
+ <p>You are responsible for what your agent does with a skill. Running a skill against a system you do
+ not own or have permission to test may be a criminal offence.</p>
+
+ <h2>4. No warranty</h2>
+ <p>The site and every skill are provided <strong>"as is", without warranty of any kind</strong>,
+ express or implied, including merchantability, fitness for a particular purpose and non-infringement.
+ No guarantee is given that a skill is accurate, current, complete, or that it will produce any
+ particular result. AI systems produce wrong output; a skill reduces that risk and does not remove it.</p>
+
+ <h2>5. Limitation of liability</h2>
+ <p>To the maximum extent permitted by law, Error and Skill Vault are not liable for any indirect,
+ incidental, special or consequential loss, or for lost profits, lost data, business interruption,
+ account suspension, or damage arising from your use of the site or any skill.</p>
+
+ <h2>6. Third-party links and tools</h2>
+ <p>The site links to Telegram, GitHub and Instagram, and skills name third-party tools. Those services
+ are not affiliated with Skill Vault, and their own terms and privacy policies apply once you use them.
+ Listing a tool is not an endorsement.</p>
+
+ <h2>7. Availability and changes</h2>
+ <p>The site may change, break or be withdrawn at any time without notice. These terms may be updated;
+ the date at the top of this page is the current version. Continuing to use the site after a change
+ means you accept the updated terms.</p>
+
+ <h2>8. Governing law</h2>
+ <p>These terms are governed by the laws of India, and disputes are subject to the jurisdiction of the
+ courts of India.</p>
+
+ <h2>9. Contact</h2>
+ <p>Questions about these terms: """ + _CONTACT + """.</p>
+ """)
+
+LEGAL["privacy"] = ("Privacy Policy",
+ "What Skill Vault does and does not collect. Short version: no accounts, no tracking, no ads.",
+ """
+ <p class="lede">Skill Vault is a static website. There are no accounts, no sign-up, no analytics and
+ no advertising. This page explains the small amount of data that does exist and why.</p>
+
+ <h2>1. What this site does not collect</h2>
+ <ul>
+   <li>No accounts, names, email addresses or phone numbers.</li>
+   <li>No newsletter or contact form — there is no form on this site.</li>
+   <li>No analytics, no tracking pixels, no advertising or retargeting.</li>
+   <li>No profiling, no selling or sharing of data with advertisers.</li>
+ </ul>
+
+ <h2>2. What is processed when you visit</h2>
+ <p>The site is served by Cloudflare Pages, which processes standard request data to deliver pages and
+ protect the service: IP address, user agent, requested path, timestamp and coarse location. This is
+ used for delivery, security and abuse prevention, and is retained under Cloudflare's own policies.
+ Skill Vault does not receive or store this as a profile of you.</p>
+
+ <h2>3. Cookies and local storage</h2>
+ <p>This site sets <strong>no cookies</strong> and writes nothing to your browser's local storage.
+ The copy buttons use the browser clipboard API only when you click them, and nothing is transmitted
+ anywhere when you do.</p>
+
+ <h2>4. Third-party services</h2>
+ <p>Outbound links go to Telegram, GitHub and Instagram. Once you follow one, that platform's terms and
+ privacy policy apply and Skill Vault has no control over what it collects. No third-party scripts,
+ embeds or trackers are loaded on this site.</p>
+
+ <h2>5. If you contact us</h2>
+ <p>If you message the developer on Telegram or GitHub, that platform holds the conversation and Skill
+ Vault sees only what you send. Do not send secrets, credentials or personal documents through those
+ channels.</p>
+
+ <h2>6. Children</h2>
+ <p>The site is written for professional and adult use and is not directed at children under 13.
+ No personal data is knowingly collected from anyone.</p>
+
+ <h2>7. Your rights</h2>
+ <p>Because Skill Vault stores no personal data, there is no profile to export, correct or delete.
+ For request logs held by the hosting provider, contact the developer and it will be raised with the
+ provider on your behalf.</p>
+
+ <h2>8. Changes</h2>
+ <p>If this policy changes, the date at the top of the page changes with it.</p>
+
+ <h2>9. Contact</h2>
+ <p>Privacy questions: """ + _CONTACT + """.</p>
+ """)
+
+LEGAL["disclaimer"] = ("Disclaimer",
+ "Skills are procedures, not guarantees. Read this before acting on anything here.",
+ """
+ <p class="lede">Every skill on this site is a procedure written for an AI agent to follow. It is
+ guidance from experience, not a promise of an outcome. Read this page before you rely on one.</p>
+
+ <h2>1. Informational and educational use</h2>
+ <p>The content is published to teach a workflow. It is not tailored to your situation, your data,
+ your jurisdiction or your risk tolerance.</p>
+
+ <h2>2. Not professional advice</h2>
+ <p>Nothing here is legal, financial, tax, medical or security advice. Skills that touch contracts,
+ invoicing, hiring, health, trading or compliance describe a method; they do not replace a qualified
+ professional. For anything consequential, consult a licensed practitioner in your jurisdiction.</p>
+
+ <h2>3. AI agents can be wrong</h2>
+ <p>Models hallucinate. A skill that tells an agent to verify its own output is doing that because the
+ failure is real and common. Check code before shipping it, check numbers before sending them, and
+ check any legal or medical text before anyone relies on it.</p>
+
+ <h2>4. No guarantee of results</h2>
+ <p>Where a skill mentions a figure — a conversion lift, a ranking improvement, a latency budget, a
+ cost saving — it is an illustrative target or a typical range, not a forecast for your project.</p>
+
+ <h2>5. Third-party tools and trademarks</h2>
+ <p>Product and company names are used for identification only. No affiliation, sponsorship or
+ endorsement is implied in either direction.</p>
+
+ <h2>6. Security work</h2>
+ <p>Skills that cover security testing are for systems you own or have <strong>written authorisation</strong>
+ to test. Unauthorised access or interference with a computer system is a criminal offence in India
+ under the Information Technology Act, 2000, and under equivalent laws elsewhere. A lab, a range or
+ written permission — never a live third-party system.</p>
+
+ <h2>7. Use at your own risk</h2>
+ <p>You are responsible for the cost, data loss, account suspension or other consequence of running a
+ skill. Where a skill conflicts with a third-party service's terms, those terms win.</p>
+
+ <h2>8. Contact</h2>
+ <p>Spotted something wrong or unsafe in a skill: """ + _CONTACT + """.</p>
+ """)
+
+LEGAL["license"] = ("Licensing &amp; MIT",
+ "Skill files are MIT licensed. Use them, change them, ship them — keep the notice.",
+ """
+ <p class="lede">Everything you download from Skill Vault is free to use, including commercially. This
+ page states exactly what is licensed and how.</p>
+
+ <h2>1. Skill files — MIT</h2>
+ <p>Every <code>skills/&lt;slug&gt;.md</code> file, and the JSON and text manifests
+ (<code>skills.json</code>, <code>status.json</code>, <code>llms.txt</code>), are released under the MIT
+ Licence below. You may use, copy, modify, merge, publish, distribute, sublicense and sell copies,
+ provided the copyright notice and permission notice are included.</p>
+
+ <h2>2. Site code</h2>
+ <p>The generator that builds this site is also MIT licensed and public:
+ <a href="https://github.com/mfm965204-cell/ai-skills-vault-source" target="_blank" rel="noopener noreferrer">ai-skills-vault-source</a>.
+ Fork it and run your own vault.</p>
+
+ <h2>3. Brand</h2>
+ <p>The name "Skill Vault", the wordmark and the logo are &copy; 2026 Error. The MIT licence does not
+ grant rights to them. If you republish the skills, use your own name and branding.</p>
+
+ <h2>4. Attribution</h2>
+ <p>Not required by the licence, but a link back to
+ <a href="https://ai-skills-vault.pages.dev/">ai-skills-vault.pages.dev</a> is appreciated and keeps the
+ library growing.</p>
+
+ <h2>5. Contributions</h2>
+ <p>If you send a skill, a fix or a suggestion, you agree it may be published here under the MIT
+ Licence.</p>
+
+ <h2>6. MIT Licence</h2>
+ <pre>MIT License
+
+Copyright (c) 2026 Error — Skill Vault
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</pre>
+ """)
+
+
+def build_legal():
+    """Render terms, privacy, disclaimer and licence from the content above."""
+    for slug in LEGAL_PAGES:
+        title, desc, body = LEGAL[slug]
+        page = head(f"{title} — Skill Vault", desc) + f"""
+<div class="wrap"><div class="doc">
+  <a class="back" href="/">← All skills</a>
+  <h1>{title}</h1>
+  <p class="updated">Last updated: {_UPDATED} · Developed by Error</p>
+  {body}
+  <hr>
+  <p style="font-size:13.5px;color:var(--dim)">Skill Vault is free and MIT licensed. Other pages:
+  <a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a> ·
+  <a href="/disclaimer.html">Disclaimer</a> · <a href="/license.html">Licensing</a></p>
+</div></div>
+""" + FOOT
+        (ROOT / f"{slug}.html").write_text(page, encoding="utf-8")
 
 def build_index():
     cards = []
@@ -850,6 +1162,27 @@ GET {BASE}/llms.txt         → plain-text index for LLM crawlers</pre>
       This site is a single HTML file plus a folder of markdown, with no build step and no dependencies.</div></details>
   </div>
 </div></section>
+
+<section id="developer"><div class="wrap">
+  <div class="shead"><div>
+    <div class="eyebrow">Credits</div>
+    <h2>Built by Error</h2>
+    <p>Skill Vault is written, built and maintained by one developer. Every skill is free, MIT licensed, and updated by hand.</p>
+  </div></div>
+  <div class="dev">
+    <div class="who">
+      <span class="av">E</span>
+      <div>
+        <h3>Developed by Error</h3>
+        <p>Independent developer and security researcher. If a skill here saved you an afternoon,
+        a follow on any of these costs nothing.</p>
+      </div>
+    </div>
+    <div class="socials">{''.join(
+      f'<a class="soc" href="{url}" target="_blank" rel="noopener noreferrer me" aria-label="{label}">{svg}<span>{label}<br><small>{handle}</small></span></a>'
+      for label, handle, url, svg in SOCIALS)}</div>
+  </div>
+</div></section>
 """ + FOOT
 
     (ROOT / "index.html").write_text(html_out, encoding="utf-8")
@@ -934,7 +1267,8 @@ GET {BASE}/llms.txt         → plain-text index for LLM crawlers</pre>
         "User-agent: ClaudeBot\nAllow: /\nUser-agent: PerplexityBot\nAllow: /\n\n"
         f"Sitemap: {BASE}/sitemap.xml\n", encoding="utf-8")
 
-    urls = [f"{BASE}/"] + [f"{BASE}/skills/{m['slug']}.html" for m in META]
+    urls = ([f"{BASE}/"] + [f"{BASE}/skills/{m['slug']}.html" for m in META]
+            + [f"{BASE}/{s}.html" for s in LEGAL_PAGES])
     sm = ['<?xml version="1.0" encoding="UTF-8"?>',
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in urls:
@@ -959,6 +1293,7 @@ GET {BASE}/llms.txt         → plain-text index for LLM crawlers</pre>
         "/llms.txt\n  Content-Type: text/plain; charset=utf-8\n  Access-Control-Allow-Origin: *\n", encoding="utf-8")
 
 build_index()
+build_legal()
 print("built index +", len(META), "skill pages")
 for p in sorted(ROOT.rglob("*")):
     if p.is_file():
