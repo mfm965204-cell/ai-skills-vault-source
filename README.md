@@ -46,6 +46,23 @@ Reads `skills/*.md`, writes `dist/` containing:
 | `status.json` | tiny inventory: count, categories, slugs — designed to survive truncated fetches |
 | `llms.txt`, `sitemap.xml`, `robots.txt`, `404.html`, `_headers` | crawler and platform config |
 
+## The UI is frozen
+
+`build.py` also owns the site's design: the dark 3D ring hero, the per-card **Copy install prompt** button, the visible prompt box under every card, the scroll reveal, the tilt, the dark theme. **None of that is a run's business.**
+
+A run may change exactly two things in `build.py`:
+
+1. append entries to the `META` list;
+2. nothing else.
+
+Every count on the page is derived from `len(META)` at build time (`numword(n)` for prose, `{n}` for digits, the stats row, the page title, the badge). Never type a skill count into the source by hand — if you find a hardcoded number, that is a bug to report, not a sentence to edit.
+
+### Incident: 2026-11-15
+
+A run rebuilt the site with its own generator instead of this one, deployed it, and shipped a page with no copy buttons, no prompt boxes and no hero. Production showed 40 skills in a dead layout, and the generator that produced it was never committed, so it was unreproducible. The design was restored from this repo at commit `v1.4`.
+
+The lesson is in the rules above: the generator in this repository is authoritative. If a run changes it, the change must be committed, or the next run silently reverts the design.
+
 ## Deploy
 
 The sandbox **cannot** reach `ai-skills-vault.pages.dev` or `api.cloudflare.com` — the egress proxy refuses both. Deploy through the Cloudflare connector, not `curl`:

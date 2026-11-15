@@ -14,6 +14,11 @@ ROOT = OUT
 SK = OUT / "skills"
 BASE = "https://ai-skills-vault.pages.dev"
 
+_WORDS = {20: "Twenty", 40: "Forty", 60: "Sixty", 80: "Eighty", 100: "One hundred"}
+def numword(n):
+    """Spell out the skill count for prose, falling back to the digits."""
+    return _WORDS.get(n, str(n))
+
 META = [
     dict(slug="3d-animation-on-phone", cat="Creative", accent="#a855f7",
          title="3D Animation On Phone",
@@ -732,7 +737,7 @@ def build_index():
   <div>
     <span class="badge"><span class="dot"></span> {n} skills live · one-prompt install · MIT</span>
     <h1 class="title">Skills that make your <span class="grad">AI agent actually useful</span></h1>
-    <p class="sub">Twenty deeply detailed skills — 3D animation on a phone, cloning a UI from screenshots,
+    <p class="sub">{numword(n)} deeply detailed skills — 3D animation on a phone, cloning a UI from screenshots,
     shipping a production React app, voice agents, RAG, deployment and more. Each one installs into Claude,
     Copilot, Cursor, Codex or any agent that can read a URL. No marketplace, no account, no package manager.</p>
     <div class="herobtns">
@@ -753,7 +758,7 @@ def build_index():
   <div class="shead">
     <div>
       <div class="eyebrow">The library</div>
-      <h2>Twenty skills, each a full operating procedure</h2>
+      <h2>{numword(n)} skills, each a full operating procedure</h2>
       <p>Not prompts. Each file is a workflow with stages, settings, tables, checklists and failure modes.</p>
     </div>
     <a class="btn s" href="/skills.json">View manifest</a>
@@ -778,13 +783,13 @@ def build_index():
   </div>
   <div class="panel">
     <h3>What a copied prompt looks like</h3>
-    <p class="hint">Replace the slug with any of the twenty above.</p>
+    <p class="hint">Replace the slug with any of the {n} above.</p>
     <pre class="snip">Read the skill at {BASE}/skills/3d-animation-on-phone.md and install it
 as a skill in your agent. Follow it exactly, including its checklists.
 Then ask me the questions it requires and do the work.</pre>
   </div>
   <div class="panel">
-    <h3>Install all twenty at once</h3>
+    <h3>Install all {n} at once</h3>
     <p class="hint">Point the agent at the manifest; it resolves every slug to its raw markdown.</p>
     <pre class="snip">Read {BASE}/skills.json
 Install every skill listed in it as a skill in your agent.
